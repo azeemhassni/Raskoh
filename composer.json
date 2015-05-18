@@ -1,0 +1,17 @@
+{
+    "name": "azi/raskoh",
+    "description": "Raskoh - easy wordpress CPT and Taxonomy registration",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Azi Baloch",
+            "email": "azeemhassni@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload" : {
+        "psr-4" : {
+            "Raskoh\\" : ["src/Raskoh/"]
+        }
+    }
+}
