@@ -1,4 +1,4 @@
-# Raskoh - WP PostType and Taxonomies
+# Raskoh - WP PostType and Taxonomies.
 
 Registring custom post types and taxonomies in wordpress is not a headache anymore. Raskoh will make you life simpler.
 
