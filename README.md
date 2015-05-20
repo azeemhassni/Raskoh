@@ -5,7 +5,7 @@ Registring custom post types and taxonomies in wordpress is not a headache anymo
 ![Usage in theme functions.php](https://raw.githubusercontent.com/azeemhassni/Raskoh/master/code-capture.PNG)
 
 #Install
-you can insall Raskoh as wordpress plugin by downloading the package and pulling it in `wp-content/plugins` folder or
+You can insall Raskoh as wordpress plugin by downloading the package and pulling it in `wp-content/plugins` folder or
 using composer.
 
 Paste this in `composer.json` file
