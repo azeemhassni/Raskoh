@@ -20,3 +20,35 @@ Paste this in `composer.json` file
 or just run this command in your project.
 `$ composer require azi/raskoh`
 
+include composers autoloader in you themes `functions.php` 
+```php 
+   require_once "vendor/autoloader.php";
+```
+
+#Usage
+##### Post Types
+to register a post type
+```php
+   $event = new Raskoh\PostType::getInstance();
+   $event->setName("Music")->register();
+```
+##### Taxonomies
+register a taxonomy along with post type
+```php
+   $event = new Raskoh\PostType::getInstance();
+   $event->setName("Music")->taxonomy('Singer')->register();
+```
+
+##### Icons
+you can also set icons to your post type 
+```php
+   $event = new Raskoh\PostType::getInstance();
+   $event->setName("Music")->taxonomy('Singer')->setIcon('dashicons-format-audioy')->register();
+```
+
+you can pass all other arguments listed at Codex for `wp_register_post_type()` like this
+```php
+   $event = new Raskoh\PostType::getInstance();
+   $event->set{ArgumentName}
+```
+
