@@ -1,4 +1,4 @@
-# Raskoh - WP PostType and Taxonomies
+# Raskoh - WP PostType and Taxonomies.
 
 [![Latest Stable Version](https://poser.pugx.org/azi/raskoh/v/stable)](https://packagist.org/packages/azi/raskoh) [![Total Downloads](https://poser.pugx.org/azi/raskoh/downloads)](https://packagist.org/packages/azi/raskoh) [![Latest Unstable Version](https://poser.pugx.org/azi/raskoh/v/unstable)](https://packagist.org/packages/azi/raskoh) [![License](https://poser.pugx.org/azi/raskoh/license)](https://packagist.org/packages/azi/raskoh)
 
