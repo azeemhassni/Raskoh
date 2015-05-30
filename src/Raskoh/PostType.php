@@ -113,7 +113,7 @@ class PostType {
      */
     public function register(){
         // Hook into the 'init' action
-        add_action( 'init', array($this,'hookInWordPress'), rand() );
+        add_action( 'init', array($this,'hookInWordPress') );
     }
 
     /**
