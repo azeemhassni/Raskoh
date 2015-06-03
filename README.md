@@ -14,7 +14,7 @@ Paste this in `composer.json` file
 ```json
 {
    "require" : {
-        "azi/raskoh" : "1.*"
+        "azi/raskoh" : "0.*"
    }
 }
 ```
