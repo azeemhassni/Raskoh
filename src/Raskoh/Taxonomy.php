@@ -53,6 +53,18 @@ class Taxonomy {
      */
     public $slug;
 
+
+    /**
+     * @param null $name
+     */
+    public function __construct($name = null){
+
+        if($name){
+            $this->setName($name);
+        }
+
+    }
+
     public function register( PostType $postType ) {
         $this->pt = $postType;
         $this->toSlug();
@@ -77,7 +89,7 @@ class Taxonomy {
         return array(
             'name'                       => _x($this->toPlural(), 'Taxonomy General Name', 'text_domain'),
             'singular_name'              => _x($this->getName(), 'Taxonomy Singular Name', 'text_domain'),
-            'menu_name'                  => __($this->getName(), 'text_domain'),
+            'menu_name'                  => __($this->toPlural(), 'text_domain'),
             'all_items'                  => __('All ' . $this->toPlural(), 'text_domain'),
             'parent_item'                => __('Parent ' . $this->getName(), 'text_domain'),
             'parent_item_colon'          => __('Parent ' . $this->getName() . ':', 'text_domain'),
@@ -123,7 +135,7 @@ class Taxonomy {
      * @return $this
      */
     public function setName( $name ) {
-        $this->name = $name;
+        $this->name = ucwords($name);
 
         return $this;
     }

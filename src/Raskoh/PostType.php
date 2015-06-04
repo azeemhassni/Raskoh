@@ -97,14 +97,24 @@ class PostType {
     /**
      * @var Taxonomy
      */
-    private $newTaxonomy;
+    private $taxonomies = array();
+
+
+    /**
+     * @param null $name
+     */
+    public function __construct($name = null){
+        if($name){
+            $this->setName($name);
+        }
+    }
 
     /**
      * @return PostType
      */
-    public static function getInstance(){
+    public static function getInstance($name = null){
         // don't need singleton due to wordpress hooks :( sadly i need to learn wp more.
-        return new PostType();
+        return new PostType($name);
     }
 
 
@@ -113,7 +123,7 @@ class PostType {
      */
     public function register(){
         // Hook into the 'init' action
-        add_action( 'init', array($this,'hookInWordPress') );
+        add_action( 'init', array($this,'hookInWordPress'), rand() );
     }
 
     /**
@@ -121,11 +131,14 @@ class PostType {
      */
     public function hookInWordPress(){
         $this->toSlug();
-        if($this->newTaxonomy){
-            $tax = $this->newTaxonomy->register($this);
 
-            $this->addTaxonomy($tax->slug);
+        if($this->taxonomies){
+            foreach($this->taxonomies as $taxonomy) {
+                $tax = $taxonomy->register($this);
+                $this->addTaxonomy($tax->slug);
+            }
         }
+
         $args = $this->buildArgs();
         $args['labels'] = $this->buildLabels();
         if($this->icon) {
@@ -141,7 +154,7 @@ class PostType {
      */
     public function buildArgs(){
 
-       return array(
+        return array(
             'label'               => __( $this->slug, $this->text_domain ),
             'description'         => __( $this->description, $this->text_domain ),
             'supports'            => $this->getSupports(),
@@ -168,22 +181,22 @@ class PostType {
      */
     public function buildLabels(){
         return array(
-                'name'                => _x( $this->toPlural(), $this->name.' General Name', $this->text_domain ),
-                'singular_name'       => _x( $this->name, 'Post Type Singular Name', $this->text_domain ),
-                'menu_name'           => __( $this->toPlural(), $this->text_domain ),
-                'name_admin_bar'      => __( $this->name, $this->text_domain ),
-                'parent_item_colon'   => __( 'Parent '.$this->name.':', $this->text_domain ),
-                'all_items'           => __( 'All '.$this->toPlural(), $this->text_domain ),
-                'add_new_item'        => __( 'Add New '.$this->name, $this->text_domain ),
-                'add_new'             => __( 'Add New', $this->text_domain ),
-                'new_item'            => __( 'New '.$this->name, $this->text_domain ),
-                'edit_item'           => __( 'Edit '.$this->name, $this->text_domain ),
-                'update_item'         => __( 'Update '.$this->name, $this->text_domain ),
-                'view_item'           => __( 'View '.$this->name, $this->text_domain ),
-                'search_items'        => __( 'Search '.$this->name, $this->text_domain ),
-                'not_found'           => __( $this->name.' Not found', $this->text_domain ),
-                'not_found_in_trash'  => __( $this->name.' Not found in Trash', $this->text_domain ),
-            );
+            'name'                => _x( $this->toPlural(), $this->name.' General Name', $this->text_domain ),
+            'singular_name'       => _x( $this->name, 'Post Type Singular Name', $this->text_domain ),
+            'menu_name'           => __( $this->toPlural(), $this->text_domain ),
+            'name_admin_bar'      => __( $this->name, $this->text_domain ),
+            'parent_item_colon'   => __( 'Parent '.$this->name.':', $this->text_domain ),
+            'all_items'           => __( 'All '.$this->toPlural(), $this->text_domain ),
+            'add_new_item'        => __( 'Add New '.$this->name, $this->text_domain ),
+            'add_new'             => __( 'Add New', $this->text_domain ),
+            'new_item'            => __( 'New '.$this->name, $this->text_domain ),
+            'edit_item'           => __( 'Edit '.$this->name, $this->text_domain ),
+            'update_item'         => __( 'Update '.$this->name, $this->text_domain ),
+            'view_item'           => __( 'View '.$this->name, $this->text_domain ),
+            'search_items'        => __( 'Search '.$this->name, $this->text_domain ),
+            'not_found'           => __( $this->name.' Not found', $this->text_domain ),
+            'not_found_in_trash'  => __( $this->name.' Not found in Trash', $this->text_domain ),
+        );
     }
 
 
@@ -377,7 +390,7 @@ class PostType {
      * @return $this
      */
     public function setName( $name ) {
-        $this->name = $name;
+        $this->name = ucwords($name);
         return $this;
     }
 
@@ -493,8 +506,27 @@ class PostType {
         $this->text_domain = $text_domain;
     }
 
-    public function taxonomy($name = '') {
-        $this->newTaxonomy = (new Taxonomy())->setName($name);
+    /**
+     * @param string $taxonomies
+     * @return $this
+     */
+    public function taxonomy($taxonomies = '') {
+
+        if (is_array($taxonomies)) {
+
+            foreach ($taxonomies as $taxonomy) {
+                $taxonomy            = new Taxonomy($taxonomy);
+                $this->taxonomies[ ] = $taxonomy;
+            }
+
+        } else {
+
+            $taxonomy = new Taxonomy();
+            $taxonomy->setName($taxonomies);
+            $this->taxonomies[ ] = $taxonomy;
+
+        }
+
         return $this;
     }
 
