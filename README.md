@@ -31,7 +31,8 @@ include composers autoloader in you themes `functions.php`
 ##### Register a Post Types
 to register a post type
 ```php
-   $event = new Raskoh\PostType("Music")->register();
+   $event = new Raskoh\PostType("Music");
+   $event->register();
 ```
 ##### Add a Taxonomy
 register a taxonomy along with post type
