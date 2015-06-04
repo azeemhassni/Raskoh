@@ -57,7 +57,7 @@ you can also set icons to your post type
 
 you can pass all other arguments listed at Codex for `wp_register_post_type()` like this
 ```php
-   $event = new Raskoh\PostType::getInstance();
+   $event = Raskoh\PostType::getInstance();
    $event->set{ArgumentName}
 ```
 
