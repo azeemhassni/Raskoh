@@ -31,34 +31,34 @@ include composers autoloader in you themes `functions.php`
 ##### Register a Post Types
 to register a post type
 ```php
-   $event = new Raskoh\PostType("Music");
-   $event->register();
+   $music = new Raskoh\PostType("Music");
+   $music->register();
 ```
 ##### Add a Taxonomy
 register a taxonomy along with post type
 ```php
-   $event = Raskoh\PostType::getInstance("Music");
-   $event->taxonomy('Singer')->register();
+   $music = Raskoh\PostType::getInstance("Music");
+   $music->taxonomy('Singer')->register();
 ```
 
 ##### Register Multiple Taxonomies
 ```php
-   $event = Raskoh\PostType::getInstance("Music");
-   $event->taxonomy(['singer','genre'])->register();
+   $music = Raskoh\PostType::getInstance("Music");
+   $music->taxonomy(['singer','genre'])->register();
 ```
 
 ##### Set Icons
 you can also set icons to your post type 
 ```php
-   $event = Raskoh\PostType::getInstance("Music");
-   $event->taxonomy('Singer')->setIcon('dashicons-format-audioy')->register();
+   $music = Raskoh\PostType::getInstance("Music");
+   $music->taxonomy('Singer')->setIcon('dashicons-format-audioy')->register();
 ```
 
 
 
 you can pass all other arguments listed at Codex for `wp_register_post_type()` like this
 ```php
-   $event = Raskoh\PostType::getInstance();
-   $event->set{ArgumentName}
+   $CPT = Raskoh\PostType::getInstance();
+   $CPT->set{ArgumentName}
 ```
 
