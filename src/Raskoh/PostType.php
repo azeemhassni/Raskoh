@@ -531,3 +531,4 @@ class PostType {
     }
 
 }
+ 

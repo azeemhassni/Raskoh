@@ -206,7 +206,7 @@ class Taxonomy {
 
         return $this;
     }
-
+ 
     /**
      * @return mixed
      */
