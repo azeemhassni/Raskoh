@@ -6,8 +6,7 @@
  *
  * @package Raskoh
  */
-class Taxonomy
-{
+class Taxonomy {
 
     /**
      * @var
@@ -58,17 +57,15 @@ class Taxonomy
     /**
      * @param null $name
      */
-    public function __construct( $name = null )
-    {
+    public function __construct($name = null){
 
-        if ($name) {
+        if($name){
             $this->setName($name);
         }
 
     }
 
-    public function register( PostType $postType )
-    {
+    public function register( PostType $postType ) {
         $this->pt = $postType;
         $this->toSlug();
         $args = $this->args();
@@ -80,8 +77,7 @@ class Taxonomy
         return $this;
     }
 
-    public function hookIntoWordPress()
-    {
+    public function hookIntoWordPress() {
         register_taxonomy($this->slug, array($this->pt->slug), $this->args);
 
     }
@@ -89,8 +85,7 @@ class Taxonomy
     /**
      * @return array
      */
-    public function labels()
-    {
+    public function labels() {
         return array(
             'name'                       => _x($this->toPlural(), 'Taxonomy General Name', 'text_domain'),
             'singular_name'              => _x($this->getName(), 'Taxonomy Singular Name', 'text_domain'),
@@ -115,8 +110,7 @@ class Taxonomy
     /**
      * @return array
      */
-    public function args()
-    {
+    public function args() {
         return array(
             'labels'            => $this->labels(),
             'hierarchical'      => $this->hierarchical,
@@ -131,8 +125,7 @@ class Taxonomy
     /**
      * Convert Taxonomy name to slug
      */
-    public function toSlug()
-    {
+    public function toSlug() {
         $this->slug = str_replace(' ', '-', strtolower($this->name));
     }
 
@@ -141,8 +134,7 @@ class Taxonomy
      * @param $name
      * @return $this
      */
-    public function setName( $name )
-    {
+    public function setName( $name ) {
         $this->name = ucwords($name);
 
         return $this;
@@ -151,8 +143,7 @@ class Taxonomy
     /**
      * @return mixed
      */
-    public function toPlural()
-    {
+    public function toPlural() {
         return Inflect::pluralize($this->name);
     }
 
@@ -160,8 +151,7 @@ class Taxonomy
      * @param $hierarchical
      * @return $this
      */
-    public function setHierarchical( $hierarchical )
-    {
+    public function setHierarchical( $hierarchical ) {
         $this->hierarchical = $hierarchical;
 
         return $this;
@@ -171,8 +161,7 @@ class Taxonomy
      * @param $public
      * @return $this
      */
-    public function setPublic( $public )
-    {
+    public function setPublic( $public ) {
         $this->public = $public;
 
         return $this;
@@ -182,8 +171,7 @@ class Taxonomy
      * @param $show_admin_column
      * @return $this
      */
-    public function setShowAdminColumn( $show_admin_column )
-    {
+    public function setShowAdminColumn( $show_admin_column ) {
         $this->show_admin_column = $show_admin_column;
 
         return $this;
@@ -193,8 +181,7 @@ class Taxonomy
      * @param $show_in_nav_menus
      * @return $this
      */
-    public function setShowInNavMenus( $show_in_nav_menus )
-    {
+    public function setShowInNavMenus( $show_in_nav_menus ) {
         $this->show_in_nav_menus = $show_in_nav_menus;
 
         return $this;
@@ -204,8 +191,7 @@ class Taxonomy
      * @param $show_tagcloud
      * @return $this
      */
-    public function setShowTagcloud( $show_tagcloud )
-    {
+    public function setShowTagcloud( $show_tagcloud ) {
         $this->show_tagcloud = $show_tagcloud;
 
         return $this;
@@ -215,8 +201,7 @@ class Taxonomy
      * @param $show_ui
      * @return $this
      */
-    public function setShowUi( $show_ui )
-    {
+    public function setShowUi( $show_ui ) {
         $this->show_ui = $show_ui;
 
         return $this;
@@ -225,74 +210,8 @@ class Taxonomy
     /**
      * @return mixed
      */
-    public function getName()
-    {
+    public function getName() {
         return ucwords($this->name);
-    }
-
-    /**
-     * Enable filters on admin interface
-     * @return $this
-     */
-    public function enableFilters(){
-        add_action('restrict_manage_posts', array($this, 'restrictPostsByTerm'));
-        add_action('parse_query', array($this, 'convertTermsToQuery'));
-
-        return $this;
-    }
-
-    /**
-     *  Enable filters on Admin Interface
-     */
-    public function restrictPostsByTerm()
-    {
-        if (!$this->pt) {
-            throw new \BadMethodCallException("Taxonomy is not associated with a post type");
-        }
-
-        global $typenow;
-        $post_type = $this->pt->slug;
-        $taxonomy  = $this->slug;
-        if ($typenow == $post_type) {
-            $selected      = isset( $_GET[ $taxonomy ] ) ? $_GET[ $taxonomy ] : '';
-            $info_taxonomy = get_taxonomy($taxonomy);
-            wp_dropdown_categories(array(
-                'show_option_all' => __("Show All {$info_taxonomy->label}"),
-                'taxonomy'        => $taxonomy,
-                'name'            => $taxonomy,
-                'orderby'         => 'name',
-                'selected'        => $selected,
-                'show_count'      => true,
-                'hide_empty'      => true,
-            ));
-        };
-    }
-
-    /**
-     *  Convert Terms into Query
-     * @param $query
-     */
-    public function convertTermsToQuery( $query )
-    {
-        if (!$this->pt) {
-            throw new \BadMethodCallException("Taxonomy is not associated with a post type");
-        }
-
-        global $pagenow;
-        $post_type = $this->pt->slug; 
-        $taxonomy  = $this->slug; 
-        $q_vars    = &$query->query_vars;
-        if ($pagenow == 'edit.php' &&
-            isset( $q_vars[ 'post_type' ] ) &&
-            $q_vars[ 'post_type' ] == $post_type &&
-            isset( $q_vars[ $taxonomy ] ) &&
-            is_numeric($q_vars[ $taxonomy ]) &&
-            $q_vars[ $taxonomy ] != 0
-        ) {
-
-            $term                = get_term_by('id', $q_vars[ $taxonomy ], $taxonomy);
-            $q_vars[ $taxonomy ] = $term->slug;
-        }
     }
 
 } 
