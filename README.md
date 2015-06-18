@@ -41,6 +41,14 @@ register a taxonomy along with post type
    $music->taxonomy('Singer')->register();
 ```
 
+##### Restrict Posts by Term
+if you want to add Terms dropdown on WordPress admin interface to restrict posts by terms. just pass a second boolean to 
+```php PostType::taxonomy($name, $filters = false)```  method.
+```php
+   $music = Raskoh\PostType::getInstance("Music");
+   $music->taxonomy('Singer', true)->register();
+```
+
 ##### Register Multiple Taxonomies
 ```php
    $music = Raskoh\PostType::getInstance("Music");
