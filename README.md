@@ -24,49 +24,49 @@ or just run this command in your project.
 
 include composers autoloader in you themes `functions.php` 
 ```php 
-   require_once "vendor/autoloader.php";
+require_once "vendor/autoloader.php";
 ```
 
 #Usage
 ##### Register a Post Types
 to register a post type
 ```php
-   $music = new Raskoh\PostType("Music");
-   $music->register();
+$music = new Raskoh\PostType("Music");
+$music->register();
 ```
 ##### Add a Taxonomy
 register a taxonomy along with post type
 ```php
-   $music = Raskoh\PostType::getInstance("Music");
-   $music->taxonomy('Singer')->register();
+$music = Raskoh\PostType::getInstance("Music");
+$music->taxonomy('Singer')->register();
 ```
 
 ##### Restrict Posts by Term
 if you want to add Terms dropdown on WordPress admin interface to restrict posts by terms. just pass a second boolean to 
 ```php PostType::taxonomy($name, $filters = false)```  method.
 ```php
-   $music = Raskoh\PostType::getInstance("Music");
-   $music->taxonomy('Singer', true)->register();
+$music = Raskoh\PostType::getInstance("Music");
+$music->taxonomy('Singer', true)->register();
 ```
 
 ##### Register Multiple Taxonomies
 ```php
-   $music = Raskoh\PostType::getInstance("Music");
-   $music->taxonomy(['singer','genre'])->register();
+$music = Raskoh\PostType::getInstance("Music");
+$music->taxonomy(['singer','genre'])->register();
 ```
 
 ##### Set Icons
 you can also set icons to your post type 
 ```php
-   $music = Raskoh\PostType::getInstance("Music");
-   $music->taxonomy('Singer')->setIcon('dashicons-format-audioy')->register();
+$music = Raskoh\PostType::getInstance("Music");
+$music->taxonomy('Singer')->setIcon('dashicons-format-audioy')->register();
 ```
 
 
 
 you can pass all other arguments listed at Codex for `wp_register_post_type()` like this
 ```php
-   $CPT = Raskoh\PostType::getInstance();
-   $CPT->set{ArgumentName}
+$CPT = Raskoh\PostType::getInstance();
+$CPT->set{ArgumentName}
 ```
 
