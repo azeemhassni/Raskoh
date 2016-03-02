@@ -4,10 +4,11 @@
  * Class PostType
  *
  * @package Raskoh
- * @author Azi Baloch <http://www.azibaloch.com>
+ * @author  Azi Baloch <http://www.azibaloch.com>
  */
 
-class PostType {
+class PostType
+{
 
 
     /**
@@ -98,13 +99,15 @@ class PostType {
      * @var Taxonomy
      */
     private $taxonomies = array();
+    private $priority;
 
 
     /**
      * @param null $name
      */
-    public function __construct($name = null){
-        if($name){
+    public function __construct( $name = null )
+    {
+        if ($name) {
             $this->setName($name);
         }
     }
@@ -112,7 +115,8 @@ class PostType {
     /**
      * @return PostType
      */
-    public static function getInstance($name = null){
+    public static function getInstance( $name = null )
+    {
         // don't need singleton due to wordpress hooks :( sadly i need to learn wp more.
         return new PostType($name);
     }
@@ -121,42 +125,45 @@ class PostType {
     /**
      *
      */
-    public function register(){
+    public function register()
+    {
         // Hook into the 'init' action
-        add_action( 'init', array($this,'hookInWordPress'), rand() );
+        add_action('init', array($this, 'hookInWordPress'), $this->getPriority());
     }
 
     /**
      * callback of hook in init action
      */
-    public function hookInWordPress(){
+    public function hookInWordPress()
+    {
         $this->toSlug();
 
-        if($this->taxonomies){
-            foreach($this->taxonomies as $taxonomy) {
+        if ($this->taxonomies) {
+            foreach ($this->taxonomies as $taxonomy) {
                 $tax = $taxonomy->register($this);
                 $this->addTaxonomy($tax->slug);
             }
         }
 
-        $args = $this->buildArgs();
-        $args['labels'] = $this->buildLabels();
-        if($this->icon) {
-            $args['menu_icon'] = $this->icon;
+        $args             = $this->buildArgs();
+        $args[ 'labels' ] = $this->buildLabels();
+        if ($this->icon) {
+            $args[ 'menu_icon' ] = $this->icon;
         }
 
-        register_post_type( $this->slug, $args);
+        register_post_type($this->slug, $args);
         flush_rewrite_rules();
     }
 
     /**
      * @return array
      */
-    public function buildArgs(){
+    public function buildArgs()
+    {
 
         return array(
-            'label'               => __( $this->slug, $this->text_domain ),
-            'description'         => __( $this->description, $this->text_domain ),
+            'label'               => __($this->slug, $this->text_domain),
+            'description'         => __($this->description, $this->text_domain),
             'supports'            => $this->getSupports(),
             'taxonomies'          => $this->taxonomy,
             'hierarchical'        => $this->hierarchical,
@@ -179,23 +186,24 @@ class PostType {
     /**
      * @return array
      */
-    public function buildLabels(){
+    public function buildLabels()
+    {
         return array(
-            'name'                => _x( $this->toPlural(), $this->name.' General Name', $this->text_domain ),
-            'singular_name'       => _x( $this->name, 'Post Type Singular Name', $this->text_domain ),
-            'menu_name'           => __( $this->toPlural(), $this->text_domain ),
-            'name_admin_bar'      => __( $this->name, $this->text_domain ),
-            'parent_item_colon'   => __( 'Parent '.$this->name.':', $this->text_domain ),
-            'all_items'           => __( 'All '.$this->toPlural(), $this->text_domain ),
-            'add_new_item'        => __( 'Add New '.$this->name, $this->text_domain ),
-            'add_new'             => __( 'Add New', $this->text_domain ),
-            'new_item'            => __( 'New '.$this->name, $this->text_domain ),
-            'edit_item'           => __( 'Edit '.$this->name, $this->text_domain ),
-            'update_item'         => __( 'Update '.$this->name, $this->text_domain ),
-            'view_item'           => __( 'View '.$this->name, $this->text_domain ),
-            'search_items'        => __( 'Search '.$this->name, $this->text_domain ),
-            'not_found'           => __( $this->name.' Not found', $this->text_domain ),
-            'not_found_in_trash'  => __( $this->name.' Not found in Trash', $this->text_domain ),
+            'name'               => _x($this->toPlural(), $this->name . ' General Name', $this->text_domain),
+            'singular_name'      => _x($this->name, 'Post Type Singular Name', $this->text_domain),
+            'menu_name'          => __($this->toPlural(), $this->text_domain),
+            'name_admin_bar'     => __($this->name, $this->text_domain),
+            'parent_item_colon'  => __('Parent ' . $this->name . ':', $this->text_domain),
+            'all_items'          => __('All ' . $this->toPlural(), $this->text_domain),
+            'add_new_item'       => __('Add New ' . $this->name, $this->text_domain),
+            'add_new'            => __('Add New', $this->text_domain),
+            'new_item'           => __('New ' . $this->name, $this->text_domain),
+            'edit_item'          => __('Edit ' . $this->name, $this->text_domain),
+            'update_item'        => __('Update ' . $this->name, $this->text_domain),
+            'view_item'          => __('View ' . $this->name, $this->text_domain),
+            'search_items'       => __('Search ' . $this->name, $this->text_domain),
+            'not_found'          => __($this->name . ' Not found', $this->text_domain),
+            'not_found_in_trash' => __($this->name . ' Not found in Trash', $this->text_domain),
         );
     }
 
@@ -203,8 +211,21 @@ class PostType {
     /**
      * @return array
      */
-    public function getSupports(){
-        $defaults = array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'trackbacks', 'revisions', 'custom-fields', 'page-attributes', 'post-formats' );
+    public function getSupports()
+    {
+        $defaults = array(
+            'title',
+            'editor',
+            'excerpt',
+            'author',
+            'thumbnail',
+            'comments',
+            'trackbacks',
+            'revisions',
+            'custom-fields',
+            'page-attributes',
+            'post-formats'
+        );
         return array_merge($defaults, $this->supports);
     }
 
@@ -212,28 +233,32 @@ class PostType {
     /**
      * @param $supports
      */
-    public function supports($supports){
+    public function supports( $supports )
+    {
         $this->supports = $supports;
     }
 
     /**
      * Convert post type name to slug
      */
-    public function toSlug(){
-        $this->slug = str_replace(' ', '-' ,strtolower($this->name));
+    public function toSlug()
+    {
+        $this->slug = str_replace(' ', '-', strtolower($this->name));
     }
 
     /**
      * @return mixed
      */
-    public function toPlural(){
+    public function toPlural()
+    {
         return Inflect::pluralize($this->name);
     }
 
     /**
      * @return boolean
      */
-    public function isCanExport() {
+    public function isCanExport()
+    {
         return $this->can_export;
     }
 
@@ -241,7 +266,8 @@ class PostType {
      * @param $can_export
      * @return $this
      */
-    public function setCanExport( $can_export ) {
+    public function setCanExport( $can_export )
+    {
         $this->can_export = $can_export;
         return $this;
     }
@@ -249,7 +275,8 @@ class PostType {
     /**
      * @return boolean
      */
-    public function isCapabilityType() {
+    public function isCapabilityType()
+    {
         return $this->capability_type;
     }
 
@@ -257,7 +284,8 @@ class PostType {
      * @param $capability_type
      * @return $this
      */
-    public function setCapabilityType( $capability_type ) {
+    public function setCapabilityType( $capability_type )
+    {
         $this->capability_type = $capability_type;
         return $this;
     }
@@ -265,7 +293,8 @@ class PostType {
     /**
      * @return string
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
@@ -273,7 +302,8 @@ class PostType {
      * @param $description
      * @return $this
      */
-    public function setDescription( $description ) {
+    public function setDescription( $description )
+    {
         $this->description = $description;
         return $this;
     }
@@ -281,7 +311,8 @@ class PostType {
     /**
      * @return boolean
      */
-    public function isExcludeFromSearch() {
+    public function isExcludeFromSearch()
+    {
         return $this->exclude_from_search;
     }
 
@@ -289,7 +320,8 @@ class PostType {
      * @param $exclude_from_search
      * @return $this
      */
-    public function setExcludeFromSearch( $exclude_from_search ) {
+    public function setExcludeFromSearch( $exclude_from_search )
+    {
         $this->exclude_from_search = $exclude_from_search;
         return $this;
     }
@@ -297,7 +329,8 @@ class PostType {
     /**
      * @return boolean
      */
-    public function isHasArchive() {
+    public function isHasArchive()
+    {
         return $this->has_archive;
     }
 
@@ -305,7 +338,8 @@ class PostType {
      * @param $has_archive
      * @return $this
      */
-    public function setHasArchive( $has_archive ) {
+    public function setHasArchive( $has_archive )
+    {
         $this->has_archive = $has_archive;
         return $this;
     }
@@ -313,7 +347,8 @@ class PostType {
     /**
      * @return boolean
      */
-    public function isHierarchical() {
+    public function isHierarchical()
+    {
         return $this->hierarchical;
     }
 
@@ -322,7 +357,8 @@ class PostType {
      * @param $hierarchical
      * @return $this
      */
-    public function setHierarchical( $hierarchical ) {
+    public function setHierarchical( $hierarchical )
+    {
         $this->hierarchical = $hierarchical;
         return $this;
     }
@@ -330,7 +366,8 @@ class PostType {
     /**
      * @return mixed
      */
-    public function getIcon() {
+    public function getIcon()
+    {
         return $this->icon;
     }
 
@@ -338,7 +375,8 @@ class PostType {
      * @param $icon
      * @return $this
      */
-    public function setIcon( $icon ) {
+    public function setIcon( $icon )
+    {
         $this->icon = $icon;
         return $this;
     }
@@ -346,7 +384,8 @@ class PostType {
     /**
      * @return boolean
      */
-    public function isPublic() {
+    public function isPublic()
+    {
         return $this->isPublic;
     }
 
@@ -355,7 +394,8 @@ class PostType {
      * @param $isPublic
      * @return $this
      */
-    public function setIsPublic( $isPublic ) {
+    public function setIsPublic( $isPublic )
+    {
         $this->isPublic = $isPublic;
         return $this;
     }
@@ -363,7 +403,8 @@ class PostType {
     /**
      * @return int
      */
-    public function getMenuPosition() {
+    public function getMenuPosition()
+    {
         return $this->menu_position;
     }
 
@@ -372,7 +413,8 @@ class PostType {
      * @param $menu_position
      * @return $this
      */
-    public function setMenuPosition( $menu_position ) {
+    public function setMenuPosition( $menu_position )
+    {
         $this->menu_position = $menu_position;
         return $this;
     }
@@ -380,7 +422,8 @@ class PostType {
     /**
      * @return mixed
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
@@ -389,7 +432,8 @@ class PostType {
      * @param $name
      * @return $this
      */
-    public function setName( $name ) {
+    public function setName( $name )
+    {
         $this->name = ucwords($name);
         return $this;
     }
@@ -397,112 +441,128 @@ class PostType {
     /**
      * @return boolean
      */
-    public function isQueryable() {
+    public function isQueryable()
+    {
         return $this->queryable;
     }
 
     /**
      * @param boolean $queryable
      */
-    public function setQueryable( $queryable ) {
+    public function setQueryable( $queryable )
+    {
         $this->queryable = $queryable;
     }
 
     /**
      * @return boolean
      */
-    public function isShowInAdminBar() {
+    public function isShowInAdminBar()
+    {
         return $this->show_in_admin_bar;
     }
 
     /**
      * @param boolean $show_in_admin_bar
      */
-    public function setShowInAdminBar( $show_in_admin_bar ) {
+    public function setShowInAdminBar( $show_in_admin_bar )
+    {
         $this->show_in_admin_bar = $show_in_admin_bar;
     }
 
     /**
      * @return boolean
      */
-    public function isShowInMenu() {
+    public function isShowInMenu()
+    {
         return $this->show_in_menu;
     }
 
     /**
      * @param boolean $show_in_menu
      */
-    public function setShowInMenu( $show_in_menu ) {
+    public function setShowInMenu( $show_in_menu )
+    {
         $this->show_in_menu = $show_in_menu;
     }
 
     /**
      * @return boolean
      */
-    public function isShowInNavMenus() {
+    public function isShowInNavMenus()
+    {
         return $this->show_in_nav_menus;
     }
 
     /**
      * @param boolean $show_in_nav_menus
      */
-    public function setShowInNavMenus( $show_in_nav_menus ) {
+    public function setShowInNavMenus( $show_in_nav_menus )
+    {
         $this->show_in_nav_menus = $show_in_nav_menus;
     }
 
     /**
      * @return boolean
      */
-    public function isShowUi() {
+    public function isShowUi()
+    {
         return $this->show_ui;
     }
 
     /**
      * @param boolean $show_ui
      */
-    public function setShowUi( $show_ui ) {
+    public function setShowUi( $show_ui )
+    {
         $this->show_ui = $show_ui;
     }
 
     /**
      * @return mixed
      */
-    public function getSlug() {
+    public function getSlug()
+    {
         return $this->slug;
     }
 
     /**
      * @param mixed $slug
      */
-    public function setSlug( $slug ) {
+    public function setSlug( $slug )
+    {
         $this->slug = $slug;
     }
 
     /**
      * @return mixed
      */
-    public function getTaxonomy() {
+    public function getTaxonomy()
+    {
         return $this->taxonomy;
     }
 
     /**
      * @param mixed $taxonomy
      */
-    public function addTaxonomy( $taxonomy ) {
+    public function addTaxonomy( $taxonomy )
+    {
         $this->taxonomy[] = $taxonomy;
     }
 
     /**
      * @return mixed
      */
-    public function getTextDomain() {
+    public function getTextDomain()
+    {
         return $this->text_domain;
     }
 
     /**
      * @param mixed $text_domain
      */
-    public function setTextDomain( $text_domain ) {
+    public function setTextDomain( $text_domain )
+    {
         $this->text_domain = $text_domain;
     }
 
@@ -510,23 +570,42 @@ class PostType {
      * @param string $taxonomies
      * @return $this
      */
-    public function taxonomy($taxonomies = '') {
+    public function taxonomy( $taxonomies = '' )
+    {
 
         if (is_array($taxonomies)) {
 
             foreach ($taxonomies as $taxonomy) {
-                $taxonomy            = new Taxonomy($taxonomy);
-                $this->taxonomies[ ] = $taxonomy;
+                $taxonomy           = new Taxonomy($taxonomy);
+                $this->taxonomies[] = $taxonomy;
             }
 
         } else {
 
             $taxonomy = new Taxonomy();
             $taxonomy->setName($taxonomies);
-            $this->taxonomies[ ] = $taxonomy;
+            $this->taxonomies[] = $taxonomy;
 
         }
 
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    private function getPriority()
+    {
+        return $this->priority ?: 10;
+    }
+
+    /**
+     * @param $priority
+     * @return $this
+     */
+    public function setPriority( $priority )
+    {
+        $this->priority = $priority;
         return $this;
     }
 

@@ -6,7 +6,8 @@
  *
  * @package Raskoh
  */
-class Taxonomy {
+class Taxonomy
+{
 
     /**
      * @var
@@ -53,31 +54,39 @@ class Taxonomy {
      */
     public $slug;
 
+    /**
+     * @var
+     */
+    private $priority;
+
 
     /**
      * @param null $name
      */
-    public function __construct($name = null){
+    public function __construct( $name = null )
+    {
 
-        if($name){
+        if ($name) {
             $this->setName($name);
         }
 
     }
 
-    public function register( PostType $postType ) {
+    public function register( PostType $postType )
+    {
         $this->pt = $postType;
         $this->toSlug();
         $args = $this->args();
 
         $args[ 'labels' ] = $this->labels();
         $this->args       = $args;;
-        add_action('init', array($this, 'hookIntoWordPress'), rand());
+        add_action('init', array($this, 'hookIntoWordPress'), $this->getPriority());
 
         return $this;
     }
 
-    public function hookIntoWordPress() {
+    public function hookIntoWordPress()
+    {
         register_taxonomy($this->slug, array($this->pt->slug), $this->args);
 
     }
@@ -85,7 +94,8 @@ class Taxonomy {
     /**
      * @return array
      */
-    public function labels() {
+    public function labels()
+    {
         return array(
             'name'                       => _x($this->toPlural(), 'Taxonomy General Name', 'text_domain'),
             'singular_name'              => _x($this->getName(), 'Taxonomy Singular Name', 'text_domain'),
@@ -110,7 +120,8 @@ class Taxonomy {
     /**
      * @return array
      */
-    public function args() {
+    public function args()
+    {
         return array(
             'labels'            => $this->labels(),
             'hierarchical'      => $this->hierarchical,
@@ -125,7 +136,8 @@ class Taxonomy {
     /**
      * Convert Taxonomy name to slug
      */
-    public function toSlug() {
+    public function toSlug()
+    {
         $this->slug = str_replace(' ', '-', strtolower($this->name));
     }
 
@@ -134,7 +146,8 @@ class Taxonomy {
      * @param $name
      * @return $this
      */
-    public function setName( $name ) {
+    public function setName( $name )
+    {
         $this->name = ucwords($name);
 
         return $this;
@@ -143,7 +156,8 @@ class Taxonomy {
     /**
      * @return mixed
      */
-    public function toPlural() {
+    public function toPlural()
+    {
         return Inflect::pluralize($this->name);
     }
 
@@ -151,7 +165,8 @@ class Taxonomy {
      * @param $hierarchical
      * @return $this
      */
-    public function setHierarchical( $hierarchical ) {
+    public function setHierarchical( $hierarchical )
+    {
         $this->hierarchical = $hierarchical;
 
         return $this;
@@ -161,7 +176,8 @@ class Taxonomy {
      * @param $public
      * @return $this
      */
-    public function setPublic( $public ) {
+    public function setPublic( $public )
+    {
         $this->public = $public;
 
         return $this;
@@ -171,7 +187,8 @@ class Taxonomy {
      * @param $show_admin_column
      * @return $this
      */
-    public function setShowAdminColumn( $show_admin_column ) {
+    public function setShowAdminColumn( $show_admin_column )
+    {
         $this->show_admin_column = $show_admin_column;
 
         return $this;
@@ -181,7 +198,8 @@ class Taxonomy {
      * @param $show_in_nav_menus
      * @return $this
      */
-    public function setShowInNavMenus( $show_in_nav_menus ) {
+    public function setShowInNavMenus( $show_in_nav_menus )
+    {
         $this->show_in_nav_menus = $show_in_nav_menus;
 
         return $this;
@@ -191,7 +209,8 @@ class Taxonomy {
      * @param $show_tagcloud
      * @return $this
      */
-    public function setShowTagcloud( $show_tagcloud ) {
+    public function setShowTagcloud( $show_tagcloud )
+    {
         $this->show_tagcloud = $show_tagcloud;
 
         return $this;
@@ -201,17 +220,38 @@ class Taxonomy {
      * @param $show_ui
      * @return $this
      */
-    public function setShowUi( $show_ui ) {
+    public function setShowUi( $show_ui )
+    {
         $this->show_ui = $show_ui;
 
         return $this;
     }
- 
+
     /**
      * @return mixed
      */
-    public function getName() {
+    public function getName()
+    {
         return ucwords($this->name);
     }
+
+    /**
+     * @return int
+     */
+    private function getPriority()
+    {
+        return $this->priority ?: 10;
+    }
+
+    /**
+     * @param $priority
+     * @return $this
+     */
+    public function setPriority( $priority )
+    {
+        $this->priority = $priority;
+        return $this;
+    }
+
 
 } 
