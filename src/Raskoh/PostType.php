@@ -9,8 +9,6 @@
 
 class PostType
 {
-
-
     /**
      * @var
      */
@@ -99,6 +97,13 @@ class PostType
      * @var Taxonomy
      */
     private $taxonomies = array();
+
+    /**
+     * @var array
+     */
+    private $rewrite = array();
+
+
     private $priority;
 
 
@@ -150,6 +155,11 @@ class PostType
         if ($this->icon) {
             $args[ 'menu_icon' ] = $this->icon;
         }
+
+        if (isset( $this->rewrite[ 'slug' ] )) {
+            $args[ 'rewrite' ] = $this->rewrite;
+        }
+
 
         register_post_type($this->slug, $args);
         flush_rewrite_rules();
@@ -609,5 +619,17 @@ class PostType
         return $this;
     }
 
+
+    /**
+     * Rewrite post type URL
+     *
+     * @param $slug
+     * @return $this
+     */
+    public function rewrite( $slug )
+    {
+        $this->rewrite[ 'slug' ] = $slug;
+        return $this;
+    }
+
 }
- 
