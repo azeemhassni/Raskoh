@@ -240,7 +240,7 @@ class Taxonomy
      */
     private function getPriority()
     {
-        return $this->priority ?: 8;
+        return $this->priority ?: 11;
     }
 
     /**
