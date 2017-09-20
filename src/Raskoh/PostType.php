@@ -82,6 +82,14 @@ class PostType
      */
     public $capability_type = 'page';
 
+	/**
+	 * @var bool true
+	 */
+	public $show_in_rest = true;
+
+	public $rest_base = null;
+
+	public $rest_controller_class = 'WP_REST_Posts_Controller';
 
     /**
      * @var array
@@ -190,7 +198,17 @@ class PostType
             'capability_type'     => $this->capability_type,
         );
 
-    }
+
+		if($this->show_in_rest) {
+			$args['show_in_rest'] = $this->show_in_rest;
+			$args['rest_controller_class'] = $this->rest_controller_class;
+			$args['rest_base'] = $this->rest_base ?: $this->getSlug();
+		}
+
+
+
+		return $args;
+	}
 
 
     /**
@@ -239,6 +257,37 @@ class PostType
         return array_merge($defaults, $this->supports);
     }
 
+	/**
+	 * @param $class
+	 *
+	 * @return $this
+	 */
+	public function setRestControllerClass( $class ) {
+		$this->rest_controller_class = $class;
+
+		return $this;
+	}
+
+	/**
+	 * @param $showInRest
+	 *
+	 * @return PostType
+	 */
+	public function setShowInRest( $showInRest ) {
+		$this->show_in_rest = $showInRest;
+		return $this;
+	}
+
+	/**
+	 * @param $restBase
+	 *
+	 * @return $this
+	 */
+	public function setRestBase( $restBase ) {
+		$this->rest_base = $restBase;
+
+		return $this;
+	}
 
     /**
      * @param $supports
