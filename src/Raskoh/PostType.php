@@ -179,7 +179,7 @@ class PostType
     public function buildArgs()
     {
 
-        return array(
+        $args = array(
             'label'               => __($this->slug, $this->text_domain),
             'description'         => __($this->description, $this->text_domain),
             'supports'            => $this->getSupports(),
@@ -199,16 +199,16 @@ class PostType
         );
 
 
-		if($this->show_in_rest) {
-			$args['show_in_rest'] = $this->show_in_rest;
-			$args['rest_controller_class'] = $this->rest_controller_class;
-			$args['rest_base'] = $this->rest_base ?: $this->getSlug();
-		}
-
-
-
-		return $args;
+	if($this->show_in_rest) {
+		$args['show_in_rest'] = $this->show_in_rest;
+		$args['rest_controller_class'] = $this->rest_controller_class;
+		$args['rest_base'] = $this->rest_base ?: $this->getSlug();
 	}
+
+
+
+	return $args;
+    }
 
 
     /**
