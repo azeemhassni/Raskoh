@@ -5,8 +5,8 @@ Registring custom post types and taxonomies in wordpress is not a headache anymo
 
 ![Usage in theme functions.php](https://raw.githubusercontent.com/azeemhassni/Raskoh/master/code-capture.PNG)
 
-#Install
-You can insall Raskoh as wordpress plugin by downloading the package and pulling it in `wp-content/plugins` folder or
+## Install
+You can insall Raskoh as a wordpress plugin by downloading the package and pulling it in `wp-content/plugins` folder or
 using composer.
 
 Paste this in `composer.json` file
@@ -21,13 +21,13 @@ Paste this in `composer.json` file
 or just run this command in your project.
 `$ composer require azi/raskoh`
 
-include composers autoloader in you themes `functions.php` 
+include composers autoloader in your theme's `functions.php` 
 ```php 
 require_once "vendor/autoloader.php";
 ```
 
-#Usage
-##### Register a Post Types
+## Usage
+##### Register a Post Type
 to register a post type
 ```php
 $music = new Raskoh\PostType("Music");
