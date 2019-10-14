@@ -4,7 +4,7 @@
  * Class PostType
  *
  * @package Raskoh
- * @author  Azi Baloch <http://www.azibaloch.com>
+ * @author  Azeem Hassni <https://azeemhassni.com>
  */
 
 class PostType
